@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyBank Ultra Pro</title>
+<title>MyBank Ultra Pro+</title>
 
 <style>
 
@@ -29,7 +29,7 @@ body{
 }
 
 .login-box{
-  width:330px;
+  width:340px;
   background:white;
   padding:25px;
   border-radius:14px;
@@ -78,12 +78,20 @@ body{
 }
 
 .header button{
-  background:#dc2626;
-  color:white;
   border:none;
   padding:10px 15px;
   border-radius:8px;
   cursor:pointer;
+  color:white;
+}
+
+.logout-btn{
+  background:#dc2626;
+}
+
+.dark-btn{
+  background:#374151;
+  margin-right:10px;
 }
 
 /* BALANCE */
@@ -148,7 +156,7 @@ body{
 .forms{
   margin-top:20px;
   display:grid;
-  grid-template-columns:repeat(2,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:20px;
 }
 
@@ -157,6 +165,10 @@ body{
   padding:20px;
   border-radius:12px;
   box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+.form-box h3{
+  margin-bottom:10px;
 }
 
 .form-box input,
@@ -201,6 +213,10 @@ th,td{
   text-align:left;
 }
 
+th{
+  background:#f8fafc;
+}
+
 /* POPUP */
 
 .popup{
@@ -241,9 +257,13 @@ th,td{
   border:1px solid #374151;
 }
 
+.dark th{
+  background:#1f2937;
+}
+
 /* MOBILE */
 
-@media(max-width:900px){
+@media(max-width:950px){
 
   .stats,
   .actions,
@@ -264,9 +284,10 @@ th,td{
 
   <div class="login-box">
 
-    <h2>MyBank Login</h2>
+    <h2>🏦 MyBank Login</h2>
 
     <input id="username" placeholder="Username">
+
     <input id="password" type="password" placeholder="Password">
 
     <button onclick="login()">Login / Signup</button>
@@ -283,18 +304,27 @@ th,td{
 
   <div class="header">
 
-    <h2>🏦 MyBank Ultra Pro</h2>
+    <h2>🏦 MyBank Ultra Pro+</h2>
 
     <div>
-      <button onclick="toggleDark()">🌙</button>
-      <button onclick="logout()">Logout</button>
+
+      <button class="dark-btn" onclick="toggleDark()">
+        🌙 Dark
+      </button>
+
+      <button class="logout-btn" onclick="logout()">
+        Logout
+      </button>
+
     </div>
 
   </div>
 
-  <!-- BALANCE -->
+  <!-- MAIN -->
 
   <div class="balance-section">
+
+    <!-- BALANCE -->
 
     <div class="balance-card">
 
@@ -312,34 +342,34 @@ th,td{
 
       <div class="stat-card">
         <h3>Income</h3>
-        <h2 id="income">0</h2>
+        <h2 id="income">₹ 0</h2>
       </div>
 
       <div class="stat-card">
         <h3>Expenses</h3>
-        <h2 id="expense">0</h2>
+        <h2 id="expense">₹ 0</h2>
       </div>
 
       <div class="stat-card">
         <h3>Savings</h3>
-        <h2 id="saving">0</h2>
+        <h2 id="saving">₹ 0</h2>
       </div>
 
     </div>
 
-    <!-- ACTIONS -->
+    <!-- QUICK ACTIONS -->
 
     <div class="actions">
 
-      <div class="action-card" onclick="quickAdd()">
+      <div class="action-card" onclick="focusAdd()">
         ➕ Add Money
       </div>
 
-      <div class="action-card" onclick="quickTransfer()">
+      <div class="action-card" onclick="focusTransfer()">
         💸 Transfer
       </div>
 
-      <div class="action-card" onclick="payBill()">
+      <div class="action-card" onclick="focusBill()">
         📄 Pay Bills
       </div>
 
@@ -353,7 +383,7 @@ th,td{
 
     <div class="forms">
 
-      <!-- ADD -->
+      <!-- ADD MONEY -->
 
       <div class="form-box">
 
@@ -361,7 +391,9 @@ th,td{
 
         <input id="addAmount" type="number" placeholder="Enter amount">
 
-        <button onclick="addMoney()">Add Money</button>
+        <button onclick="addMoney()">
+          Add Money
+        </button>
 
       </div>
 
@@ -378,12 +410,43 @@ th,td{
         <select id="category">
           <option>Transfer</option>
           <option>Food</option>
-          <option>Bills</option>
           <option>Recharge</option>
           <option>Shopping</option>
         </select>
 
-        <button onclick="transferMoney()">Send Money</button>
+        <button onclick="transferMoney()">
+          Send Money
+        </button>
+
+      </div>
+
+      <!-- PAY BILLS -->
+
+      <div class="form-box">
+
+        <h3>Pay Bills</h3>
+
+        <select id="billType">
+
+          <option>Electricity Bill</option>
+
+          <option>Water Bill</option>
+
+          <option>Internet Bill</option>
+
+          <option>Mobile Recharge</option>
+
+          <option>Gas Bill</option>
+
+          <option>Credit Card Bill</option>
+
+        </select>
+
+        <input id="billAmount" type="number" placeholder="Enter bill amount">
+
+        <button onclick="payBill()">
+          Pay Bill
+        </button>
 
       </div>
 
@@ -400,10 +463,15 @@ th,td{
         <thead>
 
           <tr>
+
             <th>Date</th>
+
             <th>Description</th>
+
             <th>Category</th>
+
             <th>Amount</th>
+
           </tr>
 
         </thead>
@@ -443,7 +511,12 @@ let currentUser = "";
 /* SAVE */
 
 function saveDB(){
-  localStorage.setItem("mybankDB",JSON.stringify(db));
+
+  localStorage.setItem(
+    "mybankDB",
+    JSON.stringify(db)
+  );
+
 }
 
 /* POPUP */
@@ -453,6 +526,7 @@ function popup(msg,color="#16a34a"){
   let p = document.getElementById("popup");
 
   p.innerText = msg;
+
   p.style.background = color;
 
   p.classList.add("show");
@@ -467,22 +541,34 @@ function popup(msg,color="#16a34a"){
 
 function login(){
 
-  let u = document.getElementById("username").value.trim();
-  let p = document.getElementById("password").value.trim();
+  let u =
+    document.getElementById("username").value.trim();
+
+  let p =
+    document.getElementById("password").value.trim();
 
   if(!u || !p){
+
     popup("Enter credentials","#dc2626");
+
     return;
+
   }
 
   if(!db[u]){
 
     db[u] = {
+
       password:p,
+
       balance:10000,
+
       income:0,
+
       expense:0,
+
       tx:[]
+
     };
 
     saveDB();
@@ -490,14 +576,20 @@ function login(){
   }
 
   if(db[u].password !== p){
+
     popup("Invalid Password","#dc2626");
+
     return;
+
   }
 
   currentUser = u;
 
-  document.getElementById("loginPage").style.display = "none";
-  document.getElementById("app").style.display = "block";
+  document.getElementById("loginPage").style.display =
+    "none";
+
+  document.getElementById("app").style.display =
+    "block";
 
   loadDashboard();
 
@@ -511,14 +603,17 @@ function loadDashboard(){
 
   let user = db[currentUser];
 
-  document.getElementById("balance").innerText = user.balance;
+  document.getElementById("balance").innerText =
+    user.balance;
 
-  document.getElementById("income").innerText = "₹ " + user.income;
+  document.getElementById("income").innerText =
+    "₹ " + user.income;
 
-  document.getElementById("expense").innerText = "₹ " + user.expense;
+  document.getElementById("expense").innerText =
+    "₹ " + user.expense;
 
   document.getElementById("saving").innerText =
-    "₹ " + (user.balance);
+    "₹ " + user.balance;
 
   document.getElementById("upiId").innerText =
     currentUser + "@mybank";
@@ -527,7 +622,7 @@ function loadDashboard(){
 
 }
 
-/* RENDER */
+/* TRANSACTIONS */
 
 function renderTransactions(){
 
@@ -538,14 +633,23 @@ function renderTransactions(){
   db[currentUser].tx.forEach(t=>{
 
     table.innerHTML += `
+
       <tr>
+
         <td>${t.date}</td>
+
         <td>${t.desc}</td>
+
         <td>${t.category}</td>
+
         <td style="color:${t.amount<0?'red':'green'}">
+
           ₹ ${t.amount}
+
         </td>
+
       </tr>
+
     `;
 
   });
@@ -559,28 +663,37 @@ function addMoney(){
   let amt =
     Number(document.getElementById("addAmount").value);
 
-  if(!amt || amt<=0){
+  if(!amt || amt <= 0){
+
     popup("Invalid amount","#dc2626");
+
     return;
+
   }
 
   let user = db[currentUser];
 
   user.balance += amt;
+
   user.income += amt;
 
   user.tx.unshift({
+
     date:new Date().toLocaleString(),
+
     desc:"Money Added",
+
     category:"Income",
+
     amount:amt
+
   });
 
   saveDB();
 
   loadDashboard();
 
-  popup("₹ "+amt+" added");
+  popup("₹ " + amt + " added");
 
 }
 
@@ -598,90 +711,138 @@ function transferMoney(){
     document.getElementById("category").value;
 
   if(!db[to]){
+
     popup("Receiver not found","#dc2626");
+
     return;
+
   }
 
-  if(!amt || amt<=0){
+  if(!amt || amt <= 0){
+
     popup("Invalid amount","#dc2626");
+
     return;
+
   }
 
   let sender = db[currentUser];
 
   if(amt > sender.balance){
+
     popup("Low Balance","#dc2626");
+
     return;
+
   }
 
   sender.balance -= amt;
+
   sender.expense += amt;
 
   db[to].balance += amt;
 
   sender.tx.unshift({
+
     date:new Date().toLocaleString(),
+
     desc:"Sent to " + to,
+
     category:cat,
+
     amount:-amt
+
   });
 
   db[to].tx.unshift({
+
     date:new Date().toLocaleString(),
+
     desc:"Received from " + currentUser,
+
     category:"Transfer",
+
     amount:amt
+
   });
 
   saveDB();
 
   loadDashboard();
 
-  popup("₹ "+amt+" sent to "+to);
+  popup("₹ " + amt + " sent to " + to);
 
 }
 
-/* QUICK */
-
-function quickAdd(){
-  document.getElementById("addAmount").focus();
-}
-
-function quickTransfer(){
-  document.getElementById("receiver").focus();
-}
+/* PAY BILL */
 
 function payBill(){
 
-  let amt = Number(prompt("Enter bill amount"));
+  let type =
+    document.getElementById("billType").value;
 
-  if(!amt || amt<=0){
-    popup("Invalid amount","#dc2626");
+  let amt =
+    Number(document.getElementById("billAmount").value);
+
+  if(!amt || amt <= 0){
+
+    popup("Invalid bill amount","#dc2626");
+
     return;
+
   }
 
   let user = db[currentUser];
 
   if(amt > user.balance){
-    popup("Low Balance","#dc2626");
+
+    popup("Insufficient Balance","#dc2626");
+
     return;
+
   }
 
   user.balance -= amt;
+
   user.expense += amt;
 
   user.tx.unshift({
+
     date:new Date().toLocaleString(),
-    desc:"Bill Payment",
+
+    desc:type + " Paid",
+
     category:"Bills",
+
     amount:-amt
+
   });
 
   saveDB();
 
   loadDashboard();
 
-  popup("Bill Paid");
+  popup(type + " paid successfully");
+
+}
+
+/* QUICK ACTIONS */
+
+function focusAdd(){
+
+  document.getElementById("addAmount").focus();
+
+}
+
+function focusTransfer(){
+
+  document.getElementById("receiver").focus();
+
+}
+
+function focusBill(){
+
+  document.getElementById("billAmount").focus();
 
 }
 
@@ -695,26 +856,33 @@ function downloadStatement(){
   let blob =
     new Blob([data],{type:"application/json"});
 
-  let a = document.createElement("a");
+  let a =
+    document.createElement("a");
 
-  a.href = URL.createObjectURL(blob);
+  a.href =
+    URL.createObjectURL(blob);
 
-  a.download = currentUser + "_statement.json";
+  a.download =
+    currentUser + "_statement.json";
 
   a.click();
 
 }
 
-/* DARK */
+/* DARK MODE */
 
 function toggleDark(){
+
   document.body.classList.toggle("dark");
+
 }
 
 /* LOGOUT */
 
 function logout(){
+
   location.reload();
+
 }
 
 </script>
