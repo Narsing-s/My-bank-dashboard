@@ -77,6 +77,11 @@ body{
   align-items:center;
 }
 
+.header-buttons{
+  display:flex;
+  gap:10px;
+}
+
 .header button{
   border:none;
   padding:10px 15px;
@@ -91,7 +96,6 @@ body{
 
 .dark-btn{
   background:#374151;
-  margin-right:10px;
 }
 
 /* BALANCE */
@@ -300,19 +304,17 @@ th{
 
 <div class="app" id="app">
 
-  <!-- HEADER -->
-
   <div class="header">
 
     <h2>🏦 MyBank Ultra Pro+</h2>
 
-    <div>
+    <div class="header-buttons">
 
       <button class="dark-btn" onclick="toggleDark()">
         🌙 Dark
       </button>
 
-      <button class="logout-btn" onclick="logout()">
+      <button class="logout-btn" onclick="logoutUser()">
         Logout
       </button>
 
@@ -320,11 +322,7 @@ th{
 
   </div>
 
-  <!-- MAIN -->
-
   <div class="balance-section">
-
-    <!-- BALANCE -->
 
     <div class="balance-card">
 
@@ -391,9 +389,7 @@ th{
 
         <input id="addAmount" type="number" placeholder="Enter amount">
 
-        <button onclick="addMoney()">
-          Add Money
-        </button>
+        <button onclick="addMoney()">Add Money</button>
 
       </div>
 
@@ -414,9 +410,7 @@ th{
           <option>Shopping</option>
         </select>
 
-        <button onclick="transferMoney()">
-          Send Money
-        </button>
+        <button onclick="transferMoney()">Send Money</button>
 
       </div>
 
@@ -429,15 +423,10 @@ th{
         <select id="billType">
 
           <option>Electricity Bill</option>
-
           <option>Water Bill</option>
-
           <option>Internet Bill</option>
-
           <option>Mobile Recharge</option>
-
           <option>Gas Bill</option>
-
           <option>Credit Card Bill</option>
 
         </select>
@@ -465,11 +454,8 @@ th{
           <tr>
 
             <th>Date</th>
-
             <th>Description</th>
-
             <th>Category</th>
-
             <th>Amount</th>
 
           </tr>
@@ -498,7 +484,7 @@ let db = JSON.parse(localStorage.getItem("mybankDB")) || {
 
   admin:{
     password:"1234",
-    balance:50000,
+    balance:0,
     income:0,
     expense:0,
     tx:[]
@@ -560,13 +546,9 @@ function login(){
     db[u] = {
 
       password:p,
-
-      balance:10000,
-
+      balance:0,
       income:0,
-
       expense:0,
-
       tx:[]
 
     };
@@ -680,11 +662,8 @@ function addMoney(){
   user.tx.unshift({
 
     date:new Date().toLocaleString(),
-
     desc:"Money Added",
-
     category:"Income",
-
     amount:amt
 
   });
@@ -745,11 +724,8 @@ function transferMoney(){
   sender.tx.unshift({
 
     date:new Date().toLocaleString(),
-
     desc:"Sent to " + to,
-
     category:cat,
-
     amount:-amt
 
   });
@@ -757,11 +733,8 @@ function transferMoney(){
   db[to].tx.unshift({
 
     date:new Date().toLocaleString(),
-
     desc:"Received from " + currentUser,
-
     category:"Transfer",
-
     amount:amt
 
   });
@@ -809,11 +782,8 @@ function payBill(){
   user.tx.unshift({
 
     date:new Date().toLocaleString(),
-
     desc:type + " Paid",
-
     category:"Bills",
-
     amount:-amt
 
   });
@@ -829,21 +799,15 @@ function payBill(){
 /* QUICK ACTIONS */
 
 function focusAdd(){
-
   document.getElementById("addAmount").focus();
-
 }
 
 function focusTransfer(){
-
   document.getElementById("receiver").focus();
-
 }
 
 function focusBill(){
-
   document.getElementById("billAmount").focus();
-
 }
 
 /* EXPORT */
@@ -877,11 +841,22 @@ function toggleDark(){
 
 }
 
-/* LOGOUT */
+/* FIXED LOGOUT */
 
-function logout(){
+function logoutUser(){
 
-  location.reload();
+  currentUser = "";
+
+  document.getElementById("app").style.display = "none";
+
+  document.getElementById("loginPage").style.display =
+    "flex";
+
+  document.getElementById("username").value = "";
+
+  document.getElementById("password").value = "";
+
+  popup("Logged out","#dc2626");
 
 }
 
