@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyBank Ultra Pro</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#eef2f7;
+}
+
+/* LOGIN */
+
+.login-page{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#0f172a;
+}
+
+.login-box{
+  width:330px;
+  background:white;
+  padding:25px;
+  border-radius:14px;
+  box-shadow:0 10px 20px rgba(0,0,0,0.2);
+}
+
+.login-box h2{
+  margin-bottom:20px;
+  color:#2563eb;
+}
+
+.login-box input{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+.login-box button{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  border:none;
+  background:#2563eb;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* APP */
+
+.app{
+  display:none;
+}
+
+/* HEADER */
+
+.header{
+  background:#0f172a;
+  color:white;
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.header button{
+  background:#dc2626;
+  color:white;
+  border:none;
+  padding:10px 15px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* BALANCE */
+
+.balance-section{
+  padding:20px;
+}
+
+.balance-card{
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:white;
+  padding:25px;
+  border-radius:15px;
+}
+
+.balance-card h1{
+  margin-top:10px;
+  font-size:36px;
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-top:20px;
+}
+
+.stat-card{
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* ACTIONS */
+
+.actions{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-top:20px;
+}
+
+.action-card{
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  transition:0.2s;
+}
+
+.action-card:hover{
+  transform:translateY(-3px);
+}
+
+/* FORMS */
+
+.forms{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.form-box{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+.form-box input,
+.form-box select{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+.form-box button{
+  width:100%;
+  padding:10px;
+  margin-top:12px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+}
+
+/* TABLE */
+
+.table-box{
+  background:white;
+  margin-top:20px;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid #eee;
+  text-align:left;
+}
+
+/* POPUP */
+
+.popup{
+  position:fixed;
+  top:20px;
+  right:-400px;
+  background:#16a34a;
+  color:white;
+  padding:14px 18px;
+  border-radius:10px;
+  transition:0.4s;
+  z-index:999;
+}
+
+.popup.show{
+  right:20px;
+}
+
+/* DARK MODE */
+
+.dark{
+  background:#0b1220;
+  color:white;
+}
+
+.dark .stat-card,
+.dark .action-card,
+.dark .form-box,
+.dark .table-box{
+  background:#111827;
+  color:white;
+}
+
+.dark input,
+.dark select{
+  background:#1f2937;
+  color:white;
+  border:1px solid #374151;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+  .stats,
+  .actions,
+  .forms{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div class="login-page" id="loginPage">
+
+  <div class="login-box">
+
+    <h2>MyBank Login</h2>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="login()">Login / Signup</button>
+
+  </div>
+
+</div>
+
+<!-- APP -->
+
+<div class="app" id="app">
+
+  <!-- HEADER -->
+
+  <div class="header">
+
+    <h2>🏦 MyBank Ultra Pro</h2>
+
+    <div>
+      <button onclick="toggleDark()">🌙</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+  </div>
+
+  <!-- BALANCE -->
+
+  <div class="balance-section">
+
+    <div class="balance-card">
+
+      <p>Total Balance</p>
+
+      <h1>₹ <span id="balance">0</span></h1>
+
+      <small id="upiId"></small>
+
+    </div>
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+      <div class="stat-card">
+        <h3>Income</h3>
+        <h2 id="income">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <h3>Expenses</h3>
+        <h2 id="expense">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <h3>Savings</h3>
+        <h2 id="saving">0</h2>
+      </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+
+    <div class="actions">
+
+      <div class="action-card" onclick="quickAdd()">
+        ➕ Add Money
+      </div>
+
+      <div class="action-card" onclick="quickTransfer()">
+        💸 Transfer
+      </div>
+
+      <div class="action-card" onclick="payBill()">
+        📄 Pay Bills
+      </div>
+
+      <div class="action-card" onclick="downloadStatement()">
+        ⬇ Export
+      </div>
+
+    </div>
+
+    <!-- FORMS -->
+
+    <div class="forms">
+
+      <!-- ADD -->
+
+      <div class="form-box">
+
+        <h3>Add Money</h3>
+
+        <input id="addAmount" type="number" placeholder="Enter amount">
+
+        <button onclick="addMoney()">Add Money</button>
+
+      </div>
+
+      <!-- TRANSFER -->
+
+      <div class="form-box">
+
+        <h3>Transfer Money</h3>
+
+        <input id="receiver" placeholder="Receiver username">
+
+        <input id="transferAmount" type="number" placeholder="Amount">
+
+        <select id="category">
+          <option>Transfer</option>
+          <option>Food</option>
+          <option>Bills</option>
+          <option>Recharge</option>
+          <option>Shopping</option>
+        </select>
+
+        <button onclick="transferMoney()">Send Money</button>
+
+      </div>
+
+    </div>
+
+    <!-- TRANSACTIONS -->
+
+    <div class="table-box">
+
+      <h3>Recent Transactions</h3>
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="txTable"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- POPUP -->
+
+<div class="popup" id="popup"></div>
+
+<script>
+
+/* DATABASE */
+
+let db = JSON.parse(localStorage.getItem("mybankDB")) || {
+
+  admin:{
+    password:"1234",
+    balance:50000,
+    income:0,
+    expense:0,
+    tx:[]
+  }
+
+};
+
+let currentUser = "";
+
+/* SAVE */
+
+function saveDB(){
+  localStorage.setItem("mybankDB",JSON.stringify(db));
+}
+
+/* POPUP */
+
+function popup(msg,color="#16a34a"){
+
+  let p = document.getElementById("popup");
+
+  p.innerText = msg;
+  p.style.background = color;
+
+  p.classList.add("show");
+
+  setTimeout(()=>{
+    p.classList.remove("show");
+  },2500);
+
+}
+
+/* LOGIN */
+
+function login(){
+
+  let u = document.getElementById("username").value.trim();
+  let p = document.getElementById("password").value.trim();
+
+  if(!u || !p){
+    popup("Enter credentials","#dc2626");
+    return;
+  }
+
+  if(!db[u]){
+
+    db[u] = {
+      password:p,
+      balance:10000,
+      income:0,
+      expense:0,
+      tx:[]
+    };
+
+    saveDB();
+
+  }
+
+  if(db[u].password !== p){
+    popup("Invalid Password","#dc2626");
+    return;
+  }
+
+  currentUser = u;
+
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("app").style.display = "block";
+
+  loadDashboard();
+
+  popup("Welcome " + u);
+
+}
+
+/* LOAD */
+
+function loadDashboard(){
+
+  let user = db[currentUser];
+
+  document.getElementById("balance").innerText = user.balance;
+
+  document.getElementById("income").innerText = "₹ " + user.income;
+
+  document.getElementById("expense").innerText = "₹ " + user.expense;
+
+  document.getElementById("saving").innerText =
+    "₹ " + (user.balance);
+
+  document.getElementById("upiId").innerText =
+    currentUser + "@mybank";
+
+  renderTransactions();
+
+}
+
+/* RENDER */
+
+function renderTransactions(){
+
+  let table = document.getElementById("txTable");
+
+  table.innerHTML = "";
+
+  db[currentUser].tx.forEach(t=>{
+
+    table.innerHTML += `
+      <tr>
+        <td>${t.date}</td>
+        <td>${t.desc}</td>
+        <td>${t.category}</td>
+        <td style="color:${t.amount<0?'red':'green'}">
+          ₹ ${t.amount}
+        </td>
+      </tr>
+    `;
+
+  });
+
+}
+
+/* ADD MONEY */
+
+function addMoney(){
+
+  let amt =
+    Number(document.getElementById("addAmount").value);
+
+  if(!amt || amt<=0){
+    popup("Invalid amount","#dc2626");
+    return;
+  }
+
+  let user = db[currentUser];
+
+  user.balance += amt;
+  user.income += amt;
+
+  user.tx.unshift({
+    date:new Date().toLocaleString(),
+    desc:"Money Added",
+    category:"Income",
+    amount:amt
+  });
+
+  saveDB();
+
+  loadDashboard();
+
+  popup("₹ "+amt+" added");
+
+}
+
+/* TRANSFER */
+
+function transferMoney(){
+
+  let to =
+    document.getElementById("receiver").value.trim();
+
+  let amt =
+    Number(document.getElementById("transferAmount").value);
+
+  let cat =
+    document.getElementById("category").value;
+
+  if(!db[to]){
+    popup("Receiver not found","#dc2626");
+    return;
+  }
+
+  if(!amt || amt<=0){
+    popup("Invalid amount","#dc2626");
+    return;
+  }
+
+  let sender = db[currentUser];
+
+  if(amt > sender.balance){
+    popup("Low Balance","#dc2626");
+    return;
+  }
+
+  sender.balance -= amt;
+  sender.expense += amt;
+
+  db[to].balance += amt;
+
+  sender.tx.unshift({
+    date:new Date().toLocaleString(),
+    desc:"Sent to " + to,
+    category:cat,
+    amount:-amt
+  });
+
+  db[to].tx.unshift({
+    date:new Date().toLocaleString(),
+    desc:"Received from " + currentUser,
+    category:"Transfer",
+    amount:amt
+  });
+
+  saveDB();
+
+  loadDashboard();
+
+  popup("₹ "+amt+" sent to "+to);
+
+}
+
+/* QUICK */
+
+function quickAdd(){
+  document.getElementById("addAmount").focus();
+}
+
+function quickTransfer(){
+  document.getElementById("receiver").focus();
+}
+
+function payBill(){
+
+  let amt = Number(prompt("Enter bill amount"));
+
+  if(!amt || amt<=0){
+    popup("Invalid amount","#dc2626");
+    return;
+  }
+
+  let user = db[currentUser];
+
+  if(amt > user.balance){
+    popup("Low Balance","#dc2626");
+    return;
+  }
+
+  user.balance -= amt;
+  user.expense += amt;
+
+  user.tx.unshift({
+    date:new Date().toLocaleString(),
+    desc:"Bill Payment",
+    category:"Bills",
+    amount:-amt
+  });
+
+  saveDB();
+
+  loadDashboard();
+
+  popup("Bill Paid");
+
+}
+
+/* EXPORT */
+
+function downloadStatement(){
+
+  let data =
+    JSON.stringify(db[currentUser],null,2);
+
+  let blob =
+    new Blob([data],{type:"application/json"});
+
+  let a = document.createElement("a");
+
+  a.href = URL.createObjectURL(blob);
+
+  a.download = currentUser + "_statement.json";
+
+  a.click();
+
+}
+
+/* DARK */
+
+function toggleDark(){
+  document.body.classList.toggle("dark");
+}
+
+/* LOGOUT */
+
+function logout(){
+  location.reload();
+}
+
+</script>
+
+</body>
+</html>
